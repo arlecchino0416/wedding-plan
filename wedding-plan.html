@@ -3,13 +3,14 @@
 <html lang="zh-CN">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-<title>赤司婚礼</title>
+<title>赤司婚礼 · 新中式 | 预算V2</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
     --bg:#f9f5f0; --card:#fff; --fg:#2d2d2d; --muted:#888;
-    --r:#b71c1c; --p1:#fce4ec; --p2:#e8f5e9; --p3:#fff8e1;
-    --pu:#d1c4e9; --pi:#ffcdd2; --gr:#c8e6c9; --go:#d4a057;
+    --r:#b71c1c; --gold:#d4a057; --gold2:#c9943e;
+    --p1:#fce4ec; --p2:#fff8e1; --p3:#e8f5e9;
+    --pu:#d1c4e9; --pi:#ffcdd2;
   }
   html{font-size:16px}
   body{background:var(--bg);color:var(--fg);font-family:"Microsoft YaHei","Segoe UI",system-ui,sans-serif;padding:12px;line-height:1.5}
@@ -20,434 +21,107 @@
   h2{font-size:1.2rem;color:var(--r);margin:24px 0 10px;padding-bottom:3px;border-bottom:3px solid #e0d5c8}
   h3{font-size:1rem;color:#555;margin:16px 0 6px}
 
-  /* ═══ FLOWCHART (HTML only) ═══ */
-  .fc-wrapper{
-    background:var(--card);border-radius:10px;padding:14px;margin:10px 0;
-    box-shadow:0 1px 6px rgba(0,0,0,.06);overflow-x:auto;-webkit-overflow-scrolling:touch
-  }
-  .fc-inner{min-width:680px;position:relative}
+  .card{background:var(--card);border-radius:10px;padding:16px;margin:10px 0;box-shadow:0 1px 6px rgba(0,0,0,.06)}
 
-  .phase-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
-  .phase-label{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:4px;display:inline-block;color:#fff;margin-bottom:6px}
+  table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.9rem}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #e8e0d5}
+  th{background:var(--r);color:#fff;font-weight:600}
+  tr.total td{font-weight:700;border-top:2px solid var(--r);background:#fff8e1}
+  tr.sub td{color:#666;font-size:.85rem}
+  td.r,th.r{text-align:right}
+  td.c,th.c{text-align:center}
+  .tag{display:inline-block;background:var(--gold);color:#fff;border-radius:4px;padding:1px 8px;font-size:.75rem;margin:2px}
+  .tag.green{background:#4caf50}
+  .tag.blue{background:#2196f3}
+  .tag.red{background:var(--r)}
 
-  /* 3-column layout */
-  .flow-row{display:flex;gap:0;align-items:center;justify-content:center;width:100%}
-  .phase-col{
-    flex:1;min-width:0;padding:12px 8px;border-radius:8px;margin:0 4px;position:relative
-  }
-  .phase-col::before{
-    content:attr(data-label);display:block;font-size:.7rem;font-weight:700;
-    padding:2px 8px;border-radius:4px;margin-bottom:8px;text-align:center;color:#fff
-  }
-  .col1{background:#fce4ec80}.col1::before{background:var(--r);content:"📌 06:00~09:15 接亲"}
-  .col2{background:#e8f5e980}.col2::before{background:#2e7d32;content:"📌 09:15~10:25 回门"}
-  .col3{background:#fff8e180}.col3::before{background:#e65100;content:"📌 10:55~21:00 婚宴"}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.compare{grid-template-columns:1fr}}
+  .plan{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  .plan h3{color:var(--r);border-bottom:2px solid var(--gold);padding-bottom:4px}
+  .plan .price{font-size:2rem;color:var(--r);font-weight:700;margin:8px 0}
+  .plan .price small{font-size:1rem;font-weight:400;color:var(--muted)}
+  .plan ul{list-style:none;padding:0}
+  .plan li{padding:4px 0;font-size:.9rem;border-bottom:1px dashed #eee}
+  .plan li .lbl{display:inline-block;width:100px;color:#888}
+  .plan li .val{font-weight:600}
+  .plan .remaining{background:#fff8e1;border-radius:6px;padding:10px;margin-top:10px;text-align:center}
+  .plan .remaining .num{font-size:1.5rem;font-weight:700;color:var(--gold)}
+  .plan .badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:.8rem;font-weight:600;margin-bottom:6px}
+  .badge.a{background:#e8f5e9;color:#2e7d32}
+  .badge.b{background#e3f2fd;color:#1565c0}
 
-  /* Node boxes */
-  .node{
-    background:var(--card);border-radius:8px;padding:10px 12px;margin:0 0 10px;
-    box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:.78rem;line-height:1.5;position:relative
-  }
-  .node .nm{font-weight:700;font-size:.85rem}
-  .node .nm .ic{margin-right:4px}
-  .node .t{font-size:.65rem;color:var(--muted)}
-  .node .act{font-size:.7rem;color:var(--r);font-weight:600;margin-top:3px}
-
-  .n1{border-left:4px solid #7e57c2}
-  .n2{border-left:4px solid var(--r)}
-  .n3{border-left:4px solid #2e7d32}
-  .n4{border-left:4px solid #388e3c}
-
-  /* Arrow connectors */
-  .arrow-wrap{display:flex;align-items:center;justify-content:center;padding:2px 0}
-  .arrow-line{
-    display:flex;align-items:center;gap:3px;font-size:.6rem;color:var(--r);font-weight:600;
-    white-space:nowrap
-  }
-  .arrow-line::after{content:"→";font-size:1rem;color:var(--r)}
-  .arrow-dash{display:flex;align-items:center;gap:3px;font-size:.6rem;color:#999}
-  .arrow-dash::after{content:"→";font-size:.8rem;color:#999}
-  .arrow-line .dur,.arrow-dash .dur{background:#f5f5f5;padding:1px 4px;border-radius:3px}
-
-  /* Timeline bar (visual) */
-  .tl-bar{background:#f5f5f5;border-radius:6px;padding:6px 4px;margin:8px 0;position:relative;height:32px}
-  .tl-seg{position:absolute;top:4px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:600}
-  .tl-seg .c{color:#fff;text-shadow:0 0 2px rgba(0,0,0,.3)}
-  .tl-time{position:absolute;bottom:-14px;font-size:.5rem;color:var(--muted)}
-  .tl-bar-wrap{position:relative;height:42px;margin:0}
-
-  /* Hotel summary */
-  .hotel-mini{font-size:.7rem;color:#555;margin-top:4px;padding:4px 6px;background:#f0faf0;border-radius:4px}
-
-  /* Legend */
-  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:6px 8px;font-size:.65rem;color:#555;margin-top:6px;background:#fafafa;border-radius:6px}
-  .legend .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:3px;vertical-align:middle}
-
-  /* ═══ CARDS ═══ */
-  .cr{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
-  .cd{flex:1 1 200px;background:var(--card);border-radius:10px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
-  .cd .ba{display:inline-block;font-size:.6rem;padding:1px 8px;border-radius:6px;color:#fff;margin-bottom:3px}
-  .ba.a{background:var(--r)}.ba.b{background:#2e7d32}.ba.c{background:#1565c0}
-  .cd h3{font-size:.85rem;margin:2px 0;color:var(--fg)}
-  .cd .ad{font-size:.7rem;color:var(--muted)}
-  .cd .pr{font-size:1.2rem;font-weight:700;color:var(--r);margin:4px 0}
-  .cd .pr sp{font-size:.6rem;font-weight:400;color:var(--muted)}
-  .cd ul{list-style:none;font-size:.72rem;line-height:1.6}
-  .cd ul li::before{content:"✓ ";color:#2e7d32;font-weight:700}
-  .cd ul .wx::before{content:"⚠ ";color:var(--go)}
-
-  /* ═══ TABLES ═══ */
-  .tw{background:var(--card);border-radius:8px;overflow:auto;margin:10px 0;box-shadow:0 1px 6px rgba(0,0,0,.06)}
-  table{width:100%;border-collapse:collapse;font-size:.72rem}
-  th{background:#f0e6dc;padding:5px 7px;text-align:left;font-weight:600;font-size:.65rem;color:#555;white-space:nowrap}
-  td{padding:4px 7px;border-bottom:1px solid #f0e8e0}
-  .hl{background:#fff8e6}
-  .tt td{background:#faf0ea;font-weight:700;border-bottom:2px solid #d4c5b5}
-  .tw th time{width:54px}
-
-  /* ═══ DECO CARDS ═══ */
-  .dr{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
-  .dc{flex:1 1 130px;background:var(--card);border-radius:8px;padding:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);text-align:center;font-size:.7rem}
-  .dc .di{font-size:1.5rem}
-  .dc h4{font-size:.75rem;margin:3px 0 1px;color:var(--fg)}
-  .dc .dp{font-size:.75rem;color:var(--r);font-weight:700}
-
-  /* ═══ CHECKLIST ═══ */
-  .ch{background:var(--card);border-radius:8px;padding:10px 14px;margin:6px 0;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:.75rem}
-  .ch h4{font-size:.8rem;margin-bottom:4px}
-  .ch ul{list-style:none;font-size:.72rem;line-height:1.7}
-  .ch ul li::before{content:"☐ ";color:var(--go)}
-
-  .nt{background:#fff8e6;border-left:4px solid var(--go);padding:8px 12px;border-radius:0 6px 6px 0;font-size:.72rem;margin:8px 0}
-  .ft{text-align:center;font-size:.65rem;color:#ccc;margin:24px 0 8px}
-
-  /* ═══ CALENDAR ═══ */
-  .ca{position:relative;padding-left:16px;margin:12px 0}
-  .ca::before{content:"";position:absolute;left:5px;top:0;bottom:0;width:2px;background:#ddd}
-  .ci{position:relative;padding:5px 0 5px 16px;font-size:.75rem;line-height:1.5}
-  .ci::before{content:"";position:absolute;left:-13px;top:10px;width:8px;height:8px;border-radius:50%;border:2px solid}
-  .ci.m1::before{border-color:var(--r);background:#ffcdd2}
-  .ci.m2::before{border-color:#1565c0;background:#bbdefb}
-  .ci.m3::before{border-color:#2e7d32;background:#c8e6c9}
-  .ci.m4::before{border-color:var(--go);background:#fff3e0}
-  .ci .dt{font-weight:600;font-size:.65rem;color:var(--muted)}
-  .ci .ta{display:inline-block;font-size:.6rem;padding:1px 5px;border-radius:3px;color:#fff;margin-right:3px}
-  .ttag{background:var(--r)}.htag{background:#1565c0}.gtag{background:#2e7d32}.otag{background:var(--go)}
-
-  @media(max-width:600px){
-    body{padding:8px}
-    .cd{flex:1 1 100%}
-    .dc{flex:1 1 45%}
-  }
+  .note{background:#fff3e0;border-left:4px solid var(--gold);padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0;font-size:.9rem}
+  .note b{color:var(--r)}
 </style>
 </head>
 <body>
 <div class="pg">
 
-<h1>💍 赤司婚礼 · 完整计划书</h1>
-<p class="sub">2027年10月30日（周六）· 备选10月23日 · 预算¥50万+¥10万buffer</p>
+<h1>💍 赤司婚礼 · 预算V2</h1>
+<div class="sub">2027年10月 · 新中式 · ¥500,000总预算</div>
 
-<!-- ═══════ FLOWCHART - HTML/CSS ONLY (no SVG) ═══════ -->
-<h2>🗺️ 婚礼日动线流程图</h2>
-<div class="fc-wrapper">
-<div class="fc-inner">
+<div class="note">
+  <b>📌 五粮液已购：</b>18瓶 × ¥760 = ¥13,680（已花费）<br>
+  <b>📌 香烟标准：</b>每桌¥360，按23桌备量（18+5备桌）<br>
+  <b>📌 新中式风格已定</b>
+</div>
 
-<!-- Row of 3 columns -->
-<div class="flow-row">
+<h2>两套方案对比</h2>
 
-  <!-- Column 1: 接亲 -->
-  <div class="phase-col col1" data-label="">
-    <div class="node n1">
-      <div class="nm"><span class="ic">🏠</span>广远新村</div>
-      <div class="t">新郎家 · 杨浦</div>
-      <div class="t">06:00 准备 · 07:00 婚车集合</div>
-      <div class="act">🚗 07:18 出发</div>
-    </div>
-    <div class="arrow-wrap"><div class="arrow-line"><span class="dur">35~45min</span></div></div>
-    <div class="node n2">
-      <div class="nm"><span class="ic">🏠</span>交城路399弄</div>
-      <div class="t">新娘家 · 静安</div>
-      <div class="t">🚩 08:05 到达</div>
-      <div class="t">🎮 堵门 → 💐 献花</div>
-      <div class="t">🍵 敬岳父母茶</div>
-      <div class="act">🚗 09:15 回程</div>
-    </div>
+<div class="compare">
+
+<!-- 方案A -->
+<div class="plan">
+  <div class="badge a">⭐ 方案A</div>
+  <h3>圣嘉艺术中心</h3>
+  <div class="price">¥292,760 <small>/ 总支出</small></div>
+  <div class="remaining">
+    预算 ¥500,000 — 剩余 <span class="num">¥207,240</span>
   </div>
+  <ul>
+    <li><span class="lbl">餐费</span><span class="val">¥180,000</span> <span class="tag green">含酒水饮料红酒</span></li>
+    <li><span class="lbl">四大金刚</span><span class="val">已含</span> <span class="tag green">婚庆套餐内</span></li>
+    <li><span class="lbl">会场布置</span><span class="val">¥30,000</span> <span class="tag">升级费用</span></li>
+    <li><span class="lbl">婚纱礼服</span><span class="val">¥12,000</span> <span class="tag blue">升级款男女</span></li>
+    <li><span class="lbl">婚车</span><span class="val">赠送6辆</span> <span class="tag green">头车玛莎拉蒂总裁+5奔驰E/宝马5系</span></li>
+    <li><span class="lbl">喜糖</span><span class="val">赠送180份</span> <span class="tag green">每桌10份</span></li>
+    <li><span class="lbl">五粮液18瓶</span><span class="val">¥13,680</span> <span class="tag red">已花费</span></li>
+    <li><span class="lbl">五粮液补5瓶</span><span class="val">¥3,800</span></li>
+    <li><span class="lbl">香烟23桌</span><span class="val">¥8,280</span></li>
+    <li><span class="lbl">红包+伴手礼+杂项</span><span class="val">¥45,000</span></li>
+  </ul>
+</div>
 
-  <!-- Arrow between col1 and col2 -->
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;min-width:50px">
-    <div class="arrow-line" style="flex-direction:column;font-size:.55rem">
-      <span class="dur">30~40min</span>
-    </div>
+<!-- 方案B -->
+<div class="plan">
+  <div class="badge b">方案B</div>
+  <h3>复旦皇冠假日酒店</h3>
+  <div class="price">¥318,430 <small>/ 总支出</small></div>
+  <div class="remaining">
+    预算 ¥500,000 — 剩余 <span class="num">¥181,570</span>
   </div>
-
-  <!-- Column 2: 回门 -->
-  <div class="phase-col col2" data-label="">
-    <div class="node n3">
-      <div class="nm"><span class="ic">🏠</span>广远新村（回）</div>
-      <div class="t">回到新郎家</div>
-      <div class="t">🚩 09:50 到达</div>
-      <div class="t">🍵 敬公婆茶 + 🥟 汤圆</div>
-      <div class="t">📸 全家福合影</div>
-      <div class="act">🚗 10:25 赴酒店</div>
-    </div>
-    <!-- Shortcut: bride direct to hotel -->
-    <div class="arrow-dash" style="flex-direction:column;margin-top:6px;font-size:.55rem">
-      <span>新娘家→酒店</span>
-      <span class="dur">12~18min</span>
-    </div>
-  </div>
-
-  <!-- Arrow between col2 and col3 -->
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;min-width:50px">
-    <div class="arrow-line" style="flex-direction:column;font-size:.55rem">
-      <span class="dur">20~30min</span>
-    </div>
-  </div>
-
-  <!-- Column 3: 婚宴 -->
-  <div class="phase-col col3" data-label="" style="flex:1.3">
-    <div class="node n4">
-      <div class="nm"><span class="ic">🏨</span>婚宴酒店</div>
-      <div class="t">🚩 10:55 到达 → 贵宾房休息</div>
-      <div class="hotel-mini">福朋喜来登 / 希尔顿逸林 / 宝华万豪</div>
-    </div>
-    
-    <!-- Timeline visual -->
-    <div style="font-size:.65rem;font-weight:600;color:#555;margin:8px 0 4px">酒店内时间线</div>
-    <div style="background:#f5f5f5;border-radius:6px;height:30px;position:relative">
-      <div style="position:absolute;left:2px;top:3px;width:55px;height:24px;background:#81c784;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;font-weight:700">补拍</div>
-      <div style="position:absolute;left:62px;top:3px;width:45px;height:24px;background:#a5d6a7;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem">彩排</div>
-      <div style="position:absolute;left:112px;top:3px;width:45px;height:24px;background:#c8e6c9;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem">迎宾</div>
-      <div style="position:absolute;left:162px;top:3px;width:70px;height:24px;background:#ffab91;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;font-weight:700">开席+仪式</div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:.5rem;color:var(--muted);padding:0 2px;margin-top:1px">
-      <span>11:00</span><span>14:30</span><span>17:00</span><span style="color:var(--r);font-weight:700">18:18</span>
-    </div>
-
-    <div style="font-size:.65rem;font-weight:600;color:var(--r);margin:14px 0 4px">🌙 晚间流程</div>
-    <div style="background:#fce4ec;border-radius:6px;height:24px;position:relative">
-      <div style="position:absolute;left:2px;top:2px;width:150px;height:20px;background:#ef9a9a;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;font-weight:600">开席→仪式→敬酒 18:18~20:15</div>
-      <div style="position:absolute;left:158px;top:2px;width:70px;height:20px;background:#ffcc80;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:600">送客</div>
-    </div>
-  </div>
+  <ul>
+    <li><span class="lbl">餐费</span><span class="val">¥161,982</span> <span class="tag green">¥8,999/桌×18</span></li>
+    <li><span class="lbl">婚庆策划</span><span class="val">¥58,888</span> <span class="tag blue">含四大金刚·外部合作</span></li>
+    <li><span class="lbl">会场布置</span><span class="val">含在婚庆内</span></li>
+    <li><span class="lbl">婚纱升级款</span><span class="val">¥18,000</span> <span class="tag blue">预估</span></li>
+    <li><span class="lbl">婚车</span><span class="val">送4辆 + 租2辆</span> <span class="tag">租车¥3,600</span></li>
+    <li><span class="lbl">喜糖自备</span><span class="val">¥2,700</span> <span class="tag">180份×¥15</span></li>
+    <li><span class="lbl">五粮液18瓶</span><span class="val">¥13,680</span> <span class="tag red">已花费</span></li>
+    <li><span class="lbl">五粮液补5瓶</span><span class="val">¥3,800</span></li>
+    <li><span class="lbl">香烟23桌</span><span class="val">¥8,280</span></li>
+    <li><span class="lbl">饮料</span><span class="val">¥2,500</span></li>
+    <li><span class="lbl">红包+伴手礼+杂项</span><span class="val">¥45,000</span></li>
+  </ul>
 </div>
 
-<!-- Legend -->
-<div class="legend">
-  <span><span class="dot" style="background:#d1c4e9"></span>新郎家</span>
-  <span><span class="dot" style="background:#ffcdd2"></span>新娘家</span>
-  <span><span class="dot" style="background:#c8e6c9"></span>婚宴酒店</span>
-  <span>→ 实际行车路线</span>
-  <span style="color:#999">- - - 虚线=直达距离</span>
-  <span style="font-weight:700;color:var(--r)">⏱ 总行程：广远→交城(堵门)→广远(敬茶)→酒店(婚宴)</span>
-</div>
-</div>
 </div>
 
-<!-- ═══════ HOTELS ═══════ -->
-<h2>🏨 三套酒店方案</h2>
-<div class="cr">
-<div class="cd"><span class="ba a">🥇 A·首选</span><h3>大宁福朋喜来登</h3><p class="ad">静安·共和新路1928号</p><p class="pr">¥11.6~14.3万 <sp>/18桌</sp></p><ul><li>万豪品牌·无柱大宴会厅·20~30桌</li><li>距新娘家12min，动线最优</li><li class="wx">单价高，需控其他项目</li></ul></div>
-<div class="cd"><span class="ba b">🥈 B·经济</span><h3>静安希尔顿逸林</h3><p class="ad">静安·西藏北路558号</p><p class="pr">¥8.3~11.2万 <sp>/18桌</sp></p><ul><li>价格最低，省¥3~5万升级其他</li><li>希尔顿品牌·谈判空间大</li><li class="wx">铭悦厅约20桌略紧凑</li></ul></div>
-<div class="cd"><span class="ba c">🥉 C·备选</span><h3>宝华万豪酒店</h3><p class="ad">静安·广中西路</p><p class="pr">¥10.6~14.2万 <sp>/18桌</sp></p><ul><li>万豪品牌·无柱宴会厅</li><li>价格适中·交通便利</li><li class="wx">需确认10月30日档期</li></ul></div>
+<div class="note">
+  <b>⚠️ 测试版说明：</b>此为先生确认信息后的初步预算，所有未标记"已花费"的项目为预估金额。<br>
+  方案B婚纱升级款¥18,000为区间中间值（¥15,000~¥20,000），实际以先生谈定为准。
 </div>
-
-<!-- ═══════ DECORATION GUIDE ═══════ -->
-<h2>🎨 宴会厅布置指南</h2>
-
-<h3>常见风格与预算</h3>
-<div class="dr">
-<div class="dc"><div class="di">🌸</div><h4>韩式清新</h4><div class="dp">¥3~5万</div><div>白绿+花艺拱门</div></div>
-<div class="dc"><div class="di">🌹</div><h4>欧式奢华</h4><div class="dp">¥6~10万</div><div>水晶灯+金+发光T台</div></div>
-<div class="dc"><div class="di">🎐</div><h4>新中式</h4><div class="dp">¥4~7万</div><div>红金+屏风+灯笼</div></div>
-<div class="dc"><div class="di">✨</div><h4>梦幻星空</h4><div class="dp">¥5~8万</div><div>深蓝+串灯+投影</div></div>
-<div class="dc"><div class="di">🌿</div><h4>森系自然</h4><div class="dp">¥4~6万</div><div>原木+绿植+麻布</div></div>
-</div>
-
-<h3>婚庆布置分项预算</h3>
-<div class="tw">
-<table>
-<tr><th>项目</th><th>基础</th><th>升级</th><th>说明</th></tr>
-<tr><td>舞台背景</td><td>¥1.5~2.5万</td><td>¥2.5~4万</td><td>桁架+花墙/灯带/喷绘</td></tr>
-<tr><td>T台/通道</td><td>¥0.5~1万</td><td>¥1~1.8万</td><td>地毯+两侧花艺/灯柱</td></tr>
-<tr><td>灯光系统</td><td>¥0.8~1.5万</td><td>¥1.5~2.5万</td><td>追光2+面光+帕灯+光束</td></tr>
-<tr><td>音响</td><td>¥0.5~0.8万</td><td>¥0.8~1.2万</td><td>线阵+无线麦4+返听</td></tr>
-<tr><td>花艺</td><td>¥0.8~1.5万</td><td>¥1.5~2.5万</td><td>手捧+胸花+桌花+舞台</td></tr>
-<tr><td>迎宾区</td><td>¥0.5~1万</td><td>¥1~1.5万</td><td>签到桌+背景板+甜品台</td></tr>
-<tr><td>吊顶装饰</td><td>¥0.3~0.8万</td><td>¥0.8~1.5万</td><td>纱幔/串灯/花串（选配）</td></tr>
-<tr><td>桌面布置</td><td>¥0.3~0.5万</td><td>¥0.5~0.8万</td><td>桌布+椅背纱+桌卡</td></tr>
-<tr><td>灯光秀/VJ</td><td>¥0.3~0.6万</td><td>¥0.6~1万</td><td>开场灯光秀+LED内容</td></tr>
-<tr class="tt"><td>合计</td><td>¥5.5~10.2万</td><td>¥10.2~16.8万</td><td></td></tr>
-<tr><td>建议预算</td><td colspan="3"><strong>¥75,000~¥85,000</strong>（含设计费）</td></tr>
-</table>
-</div>
-
-<h3>如何向婚庆公司提要求</h3>
-<div class="nt">
-<strong>💡 沟通模板（复制发给婚庆）：</strong><br><br>
-「你好，我婚礼是2027年10月30日（周六）晚宴，18桌，在XX酒店（宴会厅尺寸图/照片已附）。<br>
-我的婚庆总预算是<strong>¥75,000~¥85,000</strong>，不含四大金刚。<br>
-风格偏好<strong>韩式清新偏简约</strong>（附参考图10张），主色白+绿+金点缀。<br>
-<b>必须要有：</b>舞台背景含花墙、迎宾区签到、手捧花+胸花×6、T台带两侧花艺、双追光、每桌桌花。<br>
-请出一份方案+分项报价，有效果图最好。谢谢！」
-</div>
-
-<div class="ch"><h4>📋 谈婚庆避坑清单</h4>
-<ul>
-<li>☐ 要分项报价，不要总包价——逐项看单价是否合理</li>
-<li>☐ 确认花艺是鲜花还是仿真花（鲜花一般+30%~50%）</li>
-<li>☐ 灯光要写清楚品牌和数量（几台追光？几台帕灯？）</li>
-<li>☐ 确认搭建进场时间（酒店一般13:00后可进，搭建需4~6小时）</li>
-<li>☐ 确认是否含撤场和清洁</li>
-<li>☐ 付款节奏：签约30%→确认方案40%→婚礼当天10%→验收后20%</li>
-<li>☐ 要一份最近做过的同预算案例实拍（不是精修效果图）</li>
-<li>☐ 四大金刚是否含在套系里？不含的话自己定</li>
-</ul>
-</div>
-
-<!-- ═══════ SCHEDULE ═══════ -->
-<h2>⏱ 正婚日精确流程表</h2>
-<div class="tw">
-<table>
-<tr><th style="width:54px">时间</th><th style="width:70px">地点</th><th>事项</th><th style="width:90px">负责人</th></tr>
-<tr class="hl"><td>05:20</td><td>🏠交城路</td><td>新娘起床洗漱、敷面膜、清淡早餐</td><td>新娘</td></tr>
-<tr><td>05:30</td><td>🏠交城路</td><td>化妆师到场，开始新娘妆</td><td>化妆师</td></tr>
-<tr class="hl"><td>06:00</td><td>🏠广远新村</td><td>新郎起床准备，伴郎4人集合</td><td>新郎+伴郎</td></tr>
-<tr><td>06:30</td><td>🏠广远新村</td><td>检查物料：手捧花、胸花×6、戒指、红包</td><td>伴郎A</td></tr>
-<tr><td>07:00</td><td>广远新村楼下</td><td>🎉 婚车6辆集合（宾利头车+5奔驰S）</td><td>婚车领队</td></tr>
-<tr class="hl"><td><strong>07:18</strong></td><td><strong>🚗出发</strong></td><td><strong>🎉 吉时出发接亲</strong></td><td><strong>新郎+伴郎团</strong></td></tr>
-<tr><td><strong>08:05</strong></td><td><strong>🚩交城路</strong></td><td><strong>到达新娘家</strong>（35~45min车程）</td><td><strong>全部</strong></td></tr>
-<tr class="hl"><td>08:05~08:50</td><td>🏠交城路</td><td>🎮 堵门游戏→找婚鞋→保证书</td><td>伴娘团</td></tr>
-<tr><td>08:50</td><td>🏠交城路</td><td>💐 献手捧花 + 宣读誓言</td><td>新郎→新娘</td></tr>
-<tr class="hl"><td>08:55</td><td>🏠交城路</td><td>🍵 敬岳父母茶 + 改口</td><td>新人</td></tr>
-<tr><td>09:05</td><td>🏠交城路</td><td>📸 全家福合影</td><td>摄影</td></tr>
-<tr class="hl"><td><strong>09:15</strong></td><td><strong>🚗回程</strong></td><td><strong>新娘上主婚车，出发回新郎家</strong></td><td><strong>全部</strong></td></tr>
-<tr class="hl"><td><strong>09:50</strong></td><td><strong>🚩广远新村</strong></td><td><strong>到达新郎家</strong>·鞭炮礼花</td><td><strong>全部</strong></td></tr>
-<tr><td>09:55~10:15</td><td>🏠广远新村</td><td>🍵 敬公婆茶 + 🥟 吃汤圆 + 📸 合影</td><td>新人</td></tr>
-<tr class="hl"><td><strong>10:25</strong></td><td><strong>🚗赴酒店</strong></td><td><strong>出发赴婚宴酒店</strong></td><td><strong>全部</strong></td></tr>
-<tr><td><strong>10:55</strong></td><td><strong>🏨酒店</strong></td><td><strong>到达酒店</strong>，入贵宾房休息</td><td><strong>新人</strong></td></tr>
-<tr><td>11:00~11:45</td><td>🏨酒店</td><td>📸 酒店补拍（45min）</td><td>摄影+摄像</td></tr>
-<tr class="hl"><td>11:45~12:30</td><td>🏨贵宾房</td><td>🍜 新人午餐 + 休息</td><td>新人</td></tr>
-<tr><td>12:30~14:30</td><td>🏨贵宾房</td><td>新娘换妆 + 休息/补觉</td><td>新娘+化妆师</td></tr>
-<tr class="hl"><td>14:30~15:30</td><td>🏨宴会厅</td><td>👥 婚礼彩排（走位+音乐+灯光+交接）</td><td>新人+司仪+父母</td></tr>
-<tr><td>16:30</td><td>🏨迎宾区</td><td>伴郎伴娘就位迎宾</td><td>伴郎伴娘团</td></tr>
-<tr class="hl"><td><strong>17:00</strong></td><td><strong>🏨迎宾区</strong></td><td><strong>🤵👰 新人迎宾</strong></td><td><strong>新人+父母</strong></td></tr>
-<tr><td>18:00</td><td>🏨舞台</td><td>🎤 司仪开场</td><td>司仪</td></tr>
-<tr><td>18:03</td><td>🏨大门</td><td>💃 新娘出场（父亲交接）</td><td>新娘+父亲</td></tr>
-<tr class="hl"><td><strong>18:08</strong></td><td><strong>🏨舞台</strong></td><td><strong>💍 西式证婚：誓言+交换戒指</strong></td><td><strong>新人</strong></td></tr>
-<tr><td>18:15</td><td>🏨舞台</td><td>👨‍👩‍👧‍👦 双方父母上台致谢</td><td>双方父母</td></tr>
-<tr class="hl"><td><strong>18:18</strong></td><td><strong>🏨宴会厅</strong></td><td><strong>🍽️🎉 开席！全场举杯</strong></td><td><strong>司仪宣布</strong></td></tr>
-<tr><td>18:20~18:35</td><td>🏨化妆间</td><td>新娘换敬酒服（约15min）</td><td>新娘+化妆师</td></tr>
-<tr><td>18:40~19:15</td><td>🏨舞台</td><td>🎮 互动环节（抽奖/游戏/捧花）</td><td>司仪</td></tr>
-<tr class="hl"><td>19:15~20:15</td><td>🏨全场</td><td>🥂 逐桌敬酒（18桌×3~4分钟）</td><td>新人+伴郎</td></tr>
-<tr><td>20:15~20:25</td><td>🏨舞台</td><td>💐 抛捧花/送捧花</td><td>未婚宾客</td></tr>
-<tr class="hl"><td>20:25~20:40</td><td><strong>🏨门口</strong></td><td><strong>👋 送客 + 发伴手礼</strong></td><td><strong>新人+父母</strong></td></tr>
-<tr><td>20:40~21:00</td><td>🏨宴会厅</td><td>💰 物料回收 + 尾款结算</td><td>新郎+婚庆</td></tr>
-<tr class="hl"><td><strong>21:00</strong></td><td><strong>🏨贵宾房</strong></td><td><strong>🛏️ 休息 🎉 圆满结束</strong></td><td><strong>新人</strong></td></tr>
-</table>
-</div>
-
-<!-- ═══════ LIQUOR ═══════ -->
-<h2>🍷 酒水配置（当前市价）</h2>
-<div class="tw">
-<table>
-<tr><th>品项</th><th>每桌</th><th>单价</th><th>每桌成本</th><th>采购量</th><th>总额</th></tr>
-<tr><td>五粮液普五八代 52°</td><td>1瓶</td><td>~¥1,050</td><td>¥1,050</td><td>22瓶</td><td>¥23,100</td></tr>
-<tr><td>红酒（餐酒级）</td><td>1瓶</td><td>~¥150</td><td>¥150</td><td>20瓶</td><td>¥3,000</td></tr>
-<tr><td>软中华</td><td>2包</td><td>~¥72</td><td>¥144</td><td>42包</td><td>¥3,024</td></tr>
-<tr><td>饮料（可乐雪碧矿泉水）</td><td>按需</td><td>—</td><td>~¥140</td><td>各20瓶</td><td>¥2,500</td></tr>
-<tr><td>接亲散烟</td><td>—</td><td>—</td><td>—</td><td>—</td><td>¥1,500</td></tr>
-<tr><td>开瓶费</td><td colspan="4">谈判减免</td><td>¥0~¥2,000</td></tr>
-<tr class="tt"><td colspan="4"><strong>每桌≈¥1,484</strong></td><td><strong>总计</strong></td><td><strong>≈¥33,124~¥35,124</strong></td></tr>
-</table>
-</div>
-
-<!-- ═══════ BUDGET ═══════ -->
-<h2>💰 三方案预算对比</h2>
-<div class="tw">
-<table>
-<tr><th>项目</th><th>方案A（福朋）</th><th>方案B（逸林）</th><th>方案C（万豪）</th></tr>
-<tr><td>宴席18桌</td><td>¥115,668~¥142,578</td><td>¥82,548~¥111,528</td><td>¥106,000~¥142,000</td></tr>
-<tr><td>婚庆布置</td><td>¥75,000~¥85,000</td><td>¥80,000~¥95,000</td><td>¥75,000~¥85,000</td></tr>
-<tr><td>四大金刚</td><td>¥48,000~¥55,000</td><td>¥48,000~¥55,000</td><td>¥48,000~¥55,000</td></tr>
-<tr><td>酒水</td><td>¥33,000~¥35,000</td><td>¥33,000~¥35,000</td><td>¥33,000~¥35,000</td></tr>
-<tr><td>婚纱照+礼服+西装</td><td>¥45,000~¥55,000</td><td>¥45,000~¥55,000</td><td>¥45,000~¥55,000</td></tr>
-<tr><td>对戒</td><td>¥25,000~¥32,000</td><td>¥25,000~¥32,000</td><td>¥25,000~¥32,000</td></tr>
-<tr><td>婚车</td><td>¥12,000~¥15,000</td><td>¥12,000~¥15,000</td><td>¥12,000~¥15,000</td></tr>
-<tr><td>喜糖+请柬+伴手礼</td><td>¥22,000~¥25,000</td><td>¥22,000~¥25,000</td><td>¥22,000~¥25,000</td></tr>
-<tr><td>红包+杂项</td><td>¥40,000~¥45,000</td><td>¥40,000~¥45,000</td><td>¥40,000~¥45,000</td></tr>
-<tr class="tt"><td><strong>合计</strong></td><td><strong>¥415,668~¥489,578</strong></td><td><strong>¥387,548~¥468,528</strong></td><td><strong>¥406,000~¥489,000</strong></td></tr>
-<tr><td><strong>余量（vs¥50万）</strong></td><td><strong>¥10,422~¥84,332</strong></td><td><strong>¥31,472~¥112,452</strong></td><td><strong>¥11,000~¥94,000</strong></td></tr>
-</table>
-</div>
-
-<!-- ═══════ PREP CALENDAR ═══════ -->
-<h2>📅 完整筹备日历</h2>
-
-<h3>🏃 阶段一：签约锁定期（2026年6月~8月）</h3>
-<div class="ca">
-<div class="ci m1"><span class="ta ttag">本周</span><span class="dt">6月18日~19日</span> 和未婚妻一起过这份计划书，确认大方向</div>
-<div class="ci m1"><span class="ta ttag">下周</span><span class="dt">6月20日~21日（六~日）</span> 📞 第1批电话询价：福朋·希尔顿逸林·宝华万豪——问档期/餐标/服务费/开瓶费</div>
-<div class="ci m1"><span class="dt">6月27日~28日（六~日）</span> 📞 第2批：千禧海鸥·虹桥迎宾馆</div>
-<div class="ci m1"><span class="dt">7月4日~5日（六~日）</span> 📊 Excel对比排名</div>
-<div class="ci m1"><span class="dt">7月12日（日）10:00</span> 🏨 实地看福朋喜来登</div>
-<div class="ci m1"><span class="dt">7月12日（日）14:00</span> 🏨 实地看希尔顿逸林</div>
-<div class="ci m1"><span class="dt">7月19日（日）10:00</span> 🏨 实地看千禧海鸥</div>
-<div class="ci m1"><span class="dt">7月19日（日）14:00</span> 🏨 实地看宝华万豪/铂尔曼</div>
-<div class="ci m1"><span class="dt">7月26日（日）</span> 🏨 复看+谈判（争取免服务费/送婚房/送试菜）</div>
-<div class="ci m1"><span class="ta ttag">🔑关键</span><span class="dt"><strong>8月10日前</strong></span> <strong>🖊️ 签酒店合同+付定金30%</strong><br>合同必写：①18+0.5桌 ②10月30日 ③18:18开席 ④贵宾房2间 ⑤13:00进场 ⑥自带酒水及开瓶费上限 ⑦试菜2次 ⑧停车位≥25 ⑨备桌未开不收钱</div>
-</div>
-
-<h3>🔒 阶段二：核心供应锁定期（2026年8月~2027年1月）</h3>
-<div class="ca">
-<div class="ci m2"><span class="dt">8月中旬~9月底</span> <strong>定婚庆公司</strong>——小红书找3家比稿，给预算¥7.5~8.5万，看效果图+分项报价</div>
-<div class="ci m2"><span class="dt">9月底前</span> 📸 签婚纱照合同+预约拍摄（推荐9~10月拍）</div>
-<div class="ci m2"><span class="dt">10月11日</span> 🚗 车队踩线（实测全程）</div>
-<div class="ci m2"><span class="dt">10月底前</span> 🎨 婚庆方案初稿确认</div>
-<div class="ci m2"><span class="dt">11月底前</span> 🎤 定司仪（看完整视频→面谈）</div>
-<div class="ci m2"><span class="dt">12月底前</span> 📸 定摄影（双机）+摄像（双机+快剪）</div>
-<div class="ci m2"><span class="dt">2027年1月底前</span> 💄 定跟妆（含试妆，带婚纱去试）</div>
-</div>
-
-<h3>📋 阶段三：细化筹备期（2027年2月~6月）</h3>
-<div class="ca">
-<div class="ci m3"><span class="dt">2月14日（日）</span> 💍 对戒试戴（周生生/周大福）</div>
-<div class="ci m3"><span class="dt">2月28日前</span> 💍 购买对戒</div>
-<div class="ci m3"><span class="dt">3月15日</span> 👥 婚庆+四大+酒店启动会</div>
-<div class="ci m3"><span class="dt">3月22日（一）</span> 📸 婚纱照拍摄（3月29日雨天备选）</div>
-<div class="ci m3"><span class="dt">3月31日前</span> 👗 租/买婚纱+新郎定制西装</div>
-<div class="ci m3"><span class="dt">4月30日</span> 🍽️ 酒店第一次试菜</div>
-<div class="ci m3"><span class="dt">5月</span> 🍷 关注618大促，五粮液可能在¥980~¥1,050</div>
-<div class="ci m3"><span class="dt">6月8日</span> 💑 建议领证日</div>
-</div>
-
-<h3>🏗️ 阶段四：冲刺筹备期（2027年7月~9月）</h3>
-<div class="ca">
-<div class="ci m4"><span class="dt">7月15日前</span> 🚗 订婚车（宾利+5奔驰S约¥1.2~1.5万）</div>
-<div class="ci m4"><span class="dt">7月31日前</span> ✉️ 设计印刷请柬（印150~200份）</div>
-<div class="ci m4"><span class="dt">8月1日~15日</span> 📨 发请柬（纸质+电子）</div>
-<div class="ci m4"><span class="dt">8月20日</span> 🍬 喜糖下单</div>
-<div class="ci m4"><span class="dt">9月10日</span> 🪑 座位表定稿</div>
-<div class="ci m4"><span class="dt">9月25日</span> 🍽️ 确认最终菜单</div>
-<div class="ci m4"><span class="dt">9月28日 16:00</span> 🏨 酒店第二次彩排</div>
-</div>
-
-<h3>🏁 阶段五：最后冲刺（2027年10月）</h3>
-<div class="ca">
-<div class="ci m4"><span class="dt">10月1日~3日</span> 🛒 买酒水→送酒店库房签字拍照</div>
-<div class="ci m4"><span class="dt">10月4日~6日</span> 🏠 婚房布置（⚠别用双面胶）</div>
-<div class="ci m4"><span class="dt">10月11日 09:00</span> 🚗 车队踩线</div>
-<div class="ci m4"><span class="dt">10月13日~15日</span> 📦 打包3个物料箱→送酒店</div>
-<div class="ci m4"><span class="dt">10月28日</span> 🏗️ 婚庆进场搭建（13:00后可进）</div>
-<div class="ci m4"><span class="dt">10月29日</span> 📋 最后确认+彩排（检查搭建/走流程/查天气）</div>
-<div class="ci m4"><span class="ta ttag">🎊</span><span class="dt"><strong>10月30日（周六）</strong></span> <strong>💍 正婚日！</strong></div>
-<div class="ci m4"><span class="dt">10月31日~11月3日</span> 🔄 收尾+清点礼金+还礼服+发感谢+结尾款</div>
-</div>
-
-<div class="nt"><strong>💡 每月自查：</strong>每月1号检查本月任务。¥500,000÷16.5月≈<strong>¥30,300/月</strong>。</div>
-
-<p class="ft">💍 赤司婚礼 · 完整计划书 · Coco编制 · 2026年6月18日</p>
 
 </div>
 </body>
